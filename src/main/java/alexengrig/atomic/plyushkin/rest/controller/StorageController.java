@@ -5,6 +5,7 @@ import alexengrig.atomic.plyushkin.rest.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ import static alexengrig.atomic.plyushkin.rest.constant.RestUrls.Storage.*;
 @RequestMapping(API_V1_STORAGE)
 @RequiredArgsConstructor
 public class StorageController {
-    private final StorageService<Object> storageService;
+    private final StorageService<MultipartFile> storageService;
 
     @GetMapping
     public ResponseEntity<?> info() {
@@ -22,8 +23,8 @@ public class StorageController {
     }
 
     @PutMapping
-    public ResponseEntity<?> put(@RequestBody Object data) {
-        return Optional.ofNullable(data)
+    public ResponseEntity<?> put(@RequestParam("file") MultipartFile file) {
+        return Optional.ofNullable(file)
                 .map(storageService::store)
                 .map(ResponseEntity::created)
                 .map(ResponseEntity.BodyBuilder::build)
